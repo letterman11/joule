@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+var session = require('express-session');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -14,6 +15,50 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+//create session with default 'MemoryStore'  -- do not use in real production
+//use other express session solutions such as
+// connect-sqlite3 
+// express-mysql-session 
+
+/*
+var MySQLStore = require('express-mysql-session')(session);
+ 
+var options = {
+    host: 'localhost',
+    port: 3306,
+    user: 'session_test',
+    password: 'password',
+    database: 'session_test'
+};
+ 
+var sessionStore = new MySQLStore(options);
+ 
+*/
+
+app.use(session({
+  secret: 'the list of possible outcomes in reverser order x790124',
+  resave: false,
+  saveUninitialized: true
+}))
+
+// ----------------------------------------------------------------------------
+// middle-ware called each time on request from client -- real easy  coding flow
+app.use(function (req, res, next) {
+  if (!req.session.views) {
+    req.session.views = {}
+  }
+ 
+  // get the url pathname
+  var pathname = parseurl(req).pathname
+ 
+  // count the views
+  req.session.views[pathname] = (req.session.views[pathname] || 0) + 1
+ 
+  next()
+})
+// ---- end middle-ware session authentication -----------------------------
+// -------------------------------------------------------------------------
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -45,3 +90,14 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+
+/*
+
+require()
+express()
+app.set()
+app.use()
+module.exports
+
+*/
