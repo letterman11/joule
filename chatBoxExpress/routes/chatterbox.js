@@ -13,3 +13,14 @@ router.get('/chatterBox', function(req, res, next) {
 });
 
 module.exports = router;
+
+
+/*
+
+require()
+router.get()
+res.render()
+
+
+
+*/

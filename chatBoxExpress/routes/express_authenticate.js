@@ -43,3 +43,12 @@ connection.end();
 
 
 module.exports = router;
+
+/*
+
+app.set
+app.get
+module.exports
+
+
+*/
