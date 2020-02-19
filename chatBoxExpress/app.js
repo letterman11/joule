@@ -1,7 +1,9 @@
 var createError = require('http-errors');
 var express = require('express');
 var session = require('express-session');
+//var session = require('express-mysql-session');
 var path = require('path');
+var parseurl = require('parseurl');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
@@ -15,35 +17,37 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+// for parsing application/x-www-form-urlencoded | POST parameters
+//app.use(express.urlencoded({ extended: true })) 
 
 //create session with default 'MemoryStore'  -- do not use in real production
 //use other express session solutions such as
 // connect-sqlite3 
 // express-mysql-session 
 
-/*
 var MySQLStore = require('express-mysql-session')(session);
  
 var options = {
     host: 'localhost',
     port: 3306,
-    user: 'session_test',
-    password: 'password',
-    database: 'session_test'
+    user: 'dococt',
+    password: 'dococt',
+    database: 'dcoda_acme'
 };
  
 var sessionStore = new MySQLStore(options);
  
-*/
-
 app.use(session({
   secret: 'the list of possible outcomes in reverser order x790124',
   resave: false,
+  store: sessionStore, //MySQL specific
+  cookie: {},
   saveUninitialized: true
-}))
+}));
 
 // ----------------------------------------------------------------------------
 // middle-ware called each time on request from client -- real easy  coding flow
+
 app.use(function (req, res, next) {
   if (!req.session.views) {
     req.session.views = {}
@@ -56,7 +60,8 @@ app.use(function (req, res, next) {
   req.session.views[pathname] = (req.session.views[pathname] || 0) + 1
  
   next()
-})
+});
+
 // ---- end middle-ware session authentication -----------------------------
 // -------------------------------------------------------------------------
 
@@ -70,14 +75,14 @@ app.use('/', indexRouter);
 
 app.use('/chatterBox/registration', registrationRouter);
 app.use('/chatterBox/authenticate', authenticationRouter);
-app.use('/chatterBox/chat_sever', chatServerRouter);
+app.use('/chatterBox/chat_server', chatServerRouter);
 app.use('/chatterBox/ping_msg_server', msgServerRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
-
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
