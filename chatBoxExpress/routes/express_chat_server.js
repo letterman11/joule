@@ -7,41 +7,76 @@ var router = express.Router();
 
 var mysql = require('mysql');
 
-var connection = mysql.createConnection({
-  host     : 'localhost',
-  user     : 'dococt',
-  password : 'dococt',
-  database : 'dcoda_acme'
-});
+
+function createConnectDB() {
+
+    var connection = mysql.createConnection({
+      host     : 'localhost',
+      user     : 'dococt',
+      password : 'dococt',
+      database : 'dcoda_acme'
+    });
+
+    return connection;
+}
+
+//connection = createConnectDB()
 
 
-connection.connect();
+router.get('/', function(req, res) {
 
-//connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
-connection.query('SELECT count(*) from dcoda_acme.WM_BOOKMARK ', function (error, results, fields) {
- if (error) throw error;
-//  console.log('The solution is: ', results[0].solution);
-  console.log('The solution is: ', results[0]);
-});
-
+  connection = createConnectDB();
+  var roomIdArray = [];
+  console.log("Get chat server Successful Route");
 /* ------------------------------------------------------------------
 |if roomIDs              (1)
 |
 |-------------------------------------------------------------------*/
-var sqlstr1_sel_chatroom = "select room_id from dcoda_acme.chat_room";
+  var sqlstr_sel_chatroom = "select room_id from dcoda_acme.chat_room";
+  if(req.query.req == "roomIDs") 
+  {
+   	 connection.query(sqlstr_sel_chatroom, function (error, results, fields) {
+	     if (error) throw error;
+  	     console.log('The room IDs: ', results);
+	     results.forEach(function(elem) {
+          roomIdArray.push(elem.room_id);
+          console.log(roomIdArray);
+         });
 
+       console.log("bank ", roomIdArray);
+       res.json(roomIdArray);
+    });
+    
+  }
+  else
+/* ---------------------------------------------------------------
+|elsif roomLogin         (2)
+|
+|-----------------------------------------------------------------*/
+  {
+   var sqlstr1_insert_user_cr = "insert into user_cr values (?, ?, ?), [q_user_id, q_room_id, q_now_str, q_room_id ]" ;
+
+  }
+
+});
+
+router.post('/', function(req, res, next) {
+  console.log("Post chat server Successful Route");
+  res.send('Post Authentication Route AA CC DD');
+
+});
 /************************************************************
 * Initial state of application once user signs into chatterBox
 * generation of room IDs send back to client from table +chat_room+
 * JSON
 * DONE -1
 ************************************************************/
-
+/*
 connection.query(sqlstr1_sel_chatroom, function (error, results, fields) {
   if (error) throw error;
   console.log('rooms: ', results);
 });
-
+*/
 /* ---------------------------------------------------------------
 |elsif roomLogin         (2)
 |
@@ -133,6 +168,6 @@ connection.query(sqlstr1_insert_chatroom_queue, function (error, results, fields
 | An error occurred report back to client     
 * DONE -5
 ********************************************************/
-
+//connection.end();
 
 module.exports = router;

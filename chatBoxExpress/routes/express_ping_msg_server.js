@@ -10,6 +10,19 @@ var router = express.Router();
 var mysql = require('mysql');
 
 
+
+router.get('/', function(req, res, next) {
+  console.log("Get express ping msg server Successful Route");
+  res.send('Get Ping MSG  Route AA CC DD');
+
+});
+
+router.post('/', function(req, res, next) {
+  console.log("Post express ping msg server Successful Route");
+  res.send('Post  Ping MSG Route AA CC DD');
+
+});
+
 var sqlstr1_sel_user_cr = "select * from user_cr where user_id = ?, [q_user_id] ";
 var sqlstr2_sel_user_cr = "select user_id from user_cr where room_id = ?, [q_room_id] ";
 var sqlstr3_sel_chat_room = "select * from chat_room_queue  where msg_user_id = ?, and insert_ts >= ?, order by cr_queue_id desc limit 2, [q_msg_user_id, q_time_stamp ]";
