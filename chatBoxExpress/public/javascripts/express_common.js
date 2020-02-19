@@ -85,7 +85,7 @@ var App = {
                 doc.getElementById('logged_on').style.display = 'block';
                 App.displayLoggedOn();
                 roomPane.loadRooms();
-		userPane.userID = getCookie('UserID');
+		userPane.userID = getCookie('chatUserID');
        }
 
 
@@ -93,11 +93,11 @@ var App = {
 
     displayLoggedOn: function() {
 
-        var userID = getCookie('UserID');
+        var userID = getCookie('chatUserID');
         var spanLoggedOn = document.getElementById('form_login');
         spanLoggedOn.innerHTML = userID + " LOGGED IN | " +
         " <a href=\"javascript:App.changePane(document,App.PANE.LOGIN)\" style=\"margin-top:10px;\" " +
-	"  onclick=\"App.logOut('UserID','chatSessionID','Instance','roomSelected')\" target=\"_top\" > LOG OUT </a> ";
+	"  onclick=\"App.logOut('chatUserID','chatSessionID','Instance','roomSelected')\" target=\"_top\" > LOG OUT </a> ";
     }
 
 };
@@ -209,7 +209,7 @@ var Utility = {
         var postString = "";
         var url = App.host + Jax.serverURL;
         var frmElements = sendMsg.elements;
-        var UserID = getCookie('UserID');
+        var UserID = getCookie('chatUserID');
         var roomSelected = getCookie('roomSelected');
 
         frmElements[0].value = frmElements[0].value.replace(/\n/g," ")

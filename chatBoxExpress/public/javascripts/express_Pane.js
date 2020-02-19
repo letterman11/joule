@@ -119,7 +119,7 @@ var roomPane = {
 
     loadRooms: function() {
         
-        this.userID = getCookie('UserID');
+        this.userID = getCookie('chatUserID');
 	App.sessionID = getCookie('SessionID');
 
 	roomPane.deletePane();
