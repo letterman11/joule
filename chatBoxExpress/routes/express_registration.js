@@ -1,5 +1,25 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const mysql = require('mysql');
+
+function createConnectDB() {
+
+	var connection = mysql.createConnection({
+	  host     : 'localhost',
+	  user     : 'dococt',
+	  password : 'dococt',
+	  database : 'dcoda_acme'
+	});
+  
+    return connection;
+}
+
+function form_validate(request_body) {
+
+  return  true;
+}
+
+var insert_sqlstr_reg = "insert into user (user_name,user_passwd,user_id,email_address) values (?,?,?,?)";
 
 router.get('/', function(req, res, next) {
   console.log("Get registration server Successful Route");
@@ -9,10 +29,27 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function(req, res, next) {
   console.log("Post registration server Successful Route");
-  res.send('Post  registration Route AA CC DD');
+
+  var q_user_name = req.body.userName;
+  var q_email_address = req.body.email;
+  var q_passwd = req.body.password;
+
+  var conn = createConnectDB();
+
+  conn.query(insert_sqlstr_reg, [q_user_name, q_passwd, q_user_name, q_email_address ], function (error, results, fields) {
+
+         if (error) {
+            if(error.sqlMessage.match(/Duplicate/)) res.send(q_user_name +  " User already exists");
+			else
+				throw error;
+            console.log('Error message: ', error.sqlMessage);
+      
+         } else {
+            console.log('Rows affected for insert: ', results.affectedRows);
+  			res.send(q_user_name +  " Registration Successful");
+		} 
+  });
 
 });
-
-
 
 module.exports = router;
