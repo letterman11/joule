@@ -172,9 +172,9 @@ var roomPane = {
         var url = App.host + Jax.serverURL;
 
         //mod for express - add room function paths to URL
-        url   += "/roomLogin/";
+        url   += "/roomLogin";
         var postString; 
-        postString += "userID=" + encodeURIComponent(roomPane.userID) + "&";
+        postString = "userID=" + encodeURIComponent(roomPane.userID) + "&";
         postString += "roomID=" + encodeURIComponent(roomDiv.firstChild.data);
 
         Jax.jaxCallPost(url, postString,
@@ -211,10 +211,11 @@ var roomPane = {
         var url = App.host + Jax.serverURL;
 
         //mod for express add room function paths to URL
-        url   += "/roomLogout/";
+        url   += "/roomLogout";
         var postString; 
-        postString += "userID=" + encodeURIComponent(roomPane.userID) + "&";
+        postString = "userID=" + encodeURIComponent(roomPane.userID) + "&";
         postString += "roomID=" + encodeURIComponent(roomSelected);
+        //alert("roomLogout poststr " +  postString);
 
         eraseCookie('roomSelected');
 	

@@ -206,7 +206,7 @@ var Utility = {
     processSend: function(sendMsg) {
 
         var request;
-        var postString = "";
+        var postString;
         var url = App.host + Jax.serverURL;
         var frmElements = sendMsg.elements;
         var UserID = getCookie('chatUserID');
@@ -214,8 +214,11 @@ var Utility = {
 
         frmElements[0].value = frmElements[0].value.replace(/\n/g," ")
 
-        postString  = "req=sendMsg&";
-        postString += encodeURIComponent(frmElements[0].name) + "=" + encodeURIComponent(frmElements[0].value) + "&";
+        //mod for express nodejs routes convention
+        url += "/sendMsg";
+       
+        //postString  = "req=sendMsg&";
+        postString = encodeURIComponent(frmElements[0].name) + "=" + encodeURIComponent(frmElements[0].value) + "&";
         postString += "userID=" + encodeURIComponent(UserID) + "&" + "roomID=" + encodeURIComponent(roomSelected);
         postString = postString.replace(/%20/g,"+");
 
