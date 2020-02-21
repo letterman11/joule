@@ -51,6 +51,7 @@ router.post('/', function(req, res) {
 			console.log("SQL out ", results);
             res.cookie("chatSessionID",req.session.id, { path: "/chatterBox" }); 
 		    res.cookie("chatUserID",results[0].USER_NAME, { path: "/chatterBox" });
+			req.session.chatSessionID = req.session.id;
             res.send("Application Success");
          }
          else
