@@ -47,7 +47,7 @@
          <span class="form_login" id="form_login">
            <script language="Javascript" type="text/javascript">
             chatUserID = getCookie('chatUserID');
-             if(chatUserID != null && chatUserID.length > 0) {
+             if(chatUserID != null && chatUserID.length > 0 && chatUserID != "undefined") {
                 document.write(chatUserID + " LOGGED IN | " +
                 " <a href=\"javascript:App.changePane(document,App.PANE.LOGIN)\" style=\"margin-top:10px;\" onclick=\"App.logOut('chatUserID','chatSessionID','Instance')\" target=\"_top\" > LOG OUT </a> ");
              }
