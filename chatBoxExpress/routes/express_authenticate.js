@@ -20,7 +20,7 @@ function createConnectDB() {
     return connection;
 }
 
-sqlstr_sel_auth = "select USER_ID, USER_NAME, USER_PASSWD from dcoda_acme.user  where USER_NAME = ? and  USER_PASSWD = ? ";
+const sqlstr_sel_auth = "select USER_ID, USER_NAME, USER_PASSWD from dcoda_acme.user  where USER_NAME = ? and  USER_PASSWD = ? ";
 
 router.get('/', function(req, res, next) {
   console.log("Successful Route");
@@ -34,8 +34,8 @@ router.post('/', function(req, res) {
   
    var connection =  createConnectDB(); 
 
-   q_user_name = req.body.userName;
-   q_user_pass = req.body.userPass;
+   var q_user_name = req.body.userName;
+   var q_user_pass = req.body.userPass;
 
    connection.query(sqlstr_sel_auth, [q_user_name,q_user_pass], function (error, results, fields) {
 

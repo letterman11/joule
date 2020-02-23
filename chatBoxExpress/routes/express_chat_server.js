@@ -2,9 +2,9 @@
 | file: express_chat_server.js
 | author: Angus Brooks
 -------------------------------------------*/
-var express = require('express');
-var router = express.Router();
-var mysql = require('mysql');
+const express = require('express');
+const router = express.Router();
+const mysql = require('mysql');
 
 
 function createConnectDB() {
@@ -38,27 +38,28 @@ function genTimeStamp() {
 | the default state of application for a logged in user
 |-------------------------------------------------------------------*/
 
-var sqlstr_sel_chatroom = "select room_id from dcoda_acme.chat_room";
+const sqlstr_sel_chatroom = "select room_id from dcoda_acme.chat_room";
 router.get('/', function(req, res) {
 
   var conn = createConnectDB();
-  var roomIdArray = [];
+  var roomIDArray = [];
 
   console.log("Get chat server Successful Route");
   if(req.query.req == "roomIDs") 
   {
-   	 conn.query(sqlstr_sel_chatroom, function (error, room_results, fields) {
-	     if (error) throw error;
-  	     console.log('The room IDs: ', room_results, room_results.length, fields);
-	     room_results.forEach(function(elem) {
-          roomIdArray.push(elem.room_id);
+
+    conn.query(sqlstr_sel_chatroom, function (error, room_results, fields) {
+		 console.log("Logger ",room_results);
+	     if (error) throw error; // 
+  	     console.log('The room IDs: ',  room_results.length);
+	      room_results.forEach(function(elem) {
+          roomIDArray.push(elem.room_id);
           //console.log(roomIdArray);
          });
 
-       //console.log("bank ", roomIdArray);
-       res.json(roomIdArray);
-   });
-    
+       res.json(roomIDArray);
+    });
+
   }
 
   conn.end();
@@ -69,11 +70,12 @@ router.get('/', function(req, res) {
 | roomLogin         (2)
 |
 | insert of client into link table +user_cr+ to associate client 
-| with a chat room thus creating an entry in the chatroom queue table
+| with a chat room. when a message comes in every entry in link table
+| creates an entry  in the chatroom queue  to be later dequeue
 |-----------------------------------------------------------------*/
 
-var insert_sqlstr1_user_cr = "insert into user_cr values (?, ?, ?, ?)";
-var update_sqlstr1_user_cr = "update user_cr set user_id = ?, room_id = ?, date_ts = ?, room_name = ? where user_id = ?";
+const insert_sqlstr1_user_cr = "insert into user_cr values (?, ?, ?, ?)";
+const update_sqlstr1_user_cr = "update user_cr set user_id = ?, room_id = ?, date_ts = ?, room_name = ? where user_id = ?";
 
 router.post('/roomLogin', function(req, res) {
   console.log("Post RoomLogin chat server Successful Route");
@@ -110,7 +112,7 @@ router.post('/roomLogin', function(req, res) {
 |  delete from table +user_cr+ for the logged out user
 |  send back status
 ----------------------------------------------------------------*/
-var delete_sqlstr1_user_cr = "delete from user_cr where user_id = ? ";
+const delete_sqlstr1_user_cr = "delete from user_cr where user_id = ? ";
 
 router.post('/roomLogout', function(req, res) {
 
@@ -138,8 +140,8 @@ router.post('/roomLogout', function(req, res) {
 | JSON
 | DONE -4
 -----------------------------------------------------------------------*/
-var select_sqlstr1_send_user_cr = "select user_id from user_cr where room_id = ? " ;
-var insert_sqlstr1_chatroom_queue = "insert into chat_room_queue (user_id, room_id, insert_ts, chat_text, msg_user_id) values (?,?,?,?,?) ";
+const select_sqlstr1_send_user_cr = "select user_id from user_cr where room_id = ? " ;
+const insert_sqlstr1_chatroom_queue = "insert into chat_room_queue (user_id, room_id, insert_ts, chat_text, msg_user_id) values (?,?,?,?,?) ";
 
 router.post('/sendMsg', function(req, res, next) {
   console.log("Post Send Message chat server Successful Route");
@@ -159,6 +161,7 @@ router.post('/sendMsg', function(req, res, next) {
       
       for(var i=0; i <msg_user_array.length; i++) {
          q_msg_user_id = msg_user_array[i].user_id;
+
          conn2.query(insert_sqlstr1_chatroom_queue, [q_user_id, q_room_id, q_insert_ts, 
 				q_chat_text, q_msg_user_id], function (error, results, fields) {
           if (error) throw error;
