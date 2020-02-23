@@ -4,20 +4,10 @@
 -------------------------------------------*/
 const express = require('express');
 const router = express.Router();
-const mysql = require('mysql');
+const DbConfig = require('../db_connect_factory');
 
 
-function createConnectDB() {
-
-    var connection = mysql.createConnection({
-      host     : 'localhost',
-      user     : 'dococt',
-      password : 'dococt',
-      database : 'dcoda_acme'
-    });
-
-  return connection;
-}
+console.log("chat server test ", DbConfig.host);
 
 function genTimeStamp() {
 
@@ -41,7 +31,7 @@ function genTimeStamp() {
 const sqlstr_sel_chatroom = "select room_id from dcoda_acme.chat_room";
 router.get('/', function(req, res) {
 
-  var conn = createConnectDB();
+  var conn = DbConfig.createConnectDB();
   var roomIDArray = [];
 
   console.log("Get chat server Successful Route");
@@ -80,7 +70,7 @@ const update_sqlstr1_user_cr = "update user_cr set user_id = ?, room_id = ?, dat
 router.post('/roomLogin', function(req, res) {
   console.log("Post RoomLogin chat server Successful Route");
 
-  var conn = createConnectDB();
+  var conn = DbConfig.createConnectDB();
 
   var q_user_id = req.body.userID;
   var q_room_id = req.body.roomID;
@@ -91,7 +81,7 @@ router.post('/roomLogin', function(req, res) {
 					q_room_name ], function (error, results, fields) {
          if (error) {
             console.log('Error message: ', error.sqlMessage);
-            var conn2 = createConnectDB();
+            var conn2 = DbConfig.createConnectDB();
             conn2.query(update_sqlstr1_user_cr, [ q_user_id, q_room_id, q_now_str, 
 						q_room_name, q_user_id], function (error, results, fields) {
              if (error) throw error;
@@ -117,7 +107,7 @@ const delete_sqlstr1_user_cr = "delete from user_cr where user_id = ? ";
 router.post('/roomLogout', function(req, res) {
 
   var q_user_id = req.body.userID;
-  var conn = createConnectDB();
+  var conn = DbConfig.createConnectDB();
 
     conn.query(delete_sqlstr1_user_cr, [q_user_id], function (error, results, fields) {
      if (error) throw error;
@@ -151,8 +141,8 @@ router.post('/sendMsg', function(req, res, next) {
    var q_chat_text = req.body.msgText;
    var q_insert_ts = genTimeStamp();
    var q_msg_user_id;
-   var conn = createConnectDB();
-   var conn2 = createConnectDB();
+   var conn = DbConfig.createConnectDB();
+   var conn2 = DbConfig.createConnectDB();
 
    console.log("------------------------------", q_user_id, q_room_id, q_chat_text,q_insert_ts);
    conn.query(select_sqlstr1_send_user_cr, [q_room_id], function (error, msg_user_array, fields) {

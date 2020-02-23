@@ -33,6 +33,7 @@ var options = {
     password: 'dococt',
     database: 'dcoda_acme'
 };
+
 var sessionStore = new MySQLStore(options);
  
 app.use(session({

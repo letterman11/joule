@@ -5,20 +5,8 @@
 
 const express = require('express');
 const router = express.Router();
-const mysql = require('mysql');
+const DbConfig = require('../db_connect_factory');
 
-
-function createConnectDB() {
-
-	var connection = mysql.createConnection({
-	  host     : 'localhost',
-	  user     : 'dococt',
-	  password : 'dococt',
-	  database : 'dcoda_acme'
-	});
-  
-    return connection;
-}
 
 const sqlstr_sel_auth = "select USER_ID, USER_NAME, USER_PASSWD from dcoda_acme.user  where USER_NAME = ? and  USER_PASSWD = ? ";
 
@@ -32,7 +20,7 @@ router.get('/', function(req, res, next) {
 router.post('/', function(req, res) {
    console.log("Post Successful Route " + req.body.userName + " " + req.body.userPass);
   
-   var connection =  createConnectDB(); 
+   var connection =  DbConfig.createConnectDB(); 
 
    var q_user_name = req.body.userName;
    var q_user_pass = req.body.userPass;
@@ -49,7 +37,7 @@ router.post('/', function(req, res) {
          if (results[0] != undefined) 
          {
 			console.log("SQL out ", results);
-            res.cookie("chatSessionID",req.session.id, { path: "/chatterBox" }); 
+            	res.cookie("chatSessionID",req.session.id, { path: "/chatterBox" }); 
 		    res.cookie("chatUserID",results[0].USER_NAME, { path: "/chatterBox" });
 			req.session.chatSessionID = req.session.id;
             res.send("Application Success");

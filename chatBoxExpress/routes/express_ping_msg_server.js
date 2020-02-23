@@ -6,19 +6,8 @@
 
 const express = require('express');
 const router = express.Router();
-const mysql = require('mysql');
+const DbConfig = require('../db_connect_factory');
 
-function createConnectDB() {
-
-    var connection = mysql.createConnection({
-      host     : 'localhost',
-      user     : 'dococt',
-      password : 'dococt',
-      database : 'dcoda_acme'
-    });
-
-  return connection;
-}
 
 function genTimeStamp(newStamp) {
 
@@ -113,10 +102,10 @@ router.post('/', function(req, res, next) {
   const q_room_id = req.body.roomID;
   var g_room_results;
 
-  var conn_1 = createConnectDB();
-  var conn_2 = createConnectDB();
-  var conn_3 = createConnectDB();
-  var conn_4  = createConnectDB();
+  var conn_1 = DbConfig.createConnectDB();
+  var conn_2 = DbConfig.createConnectDB();
+  var conn_3 = DbConfig.createConnectDB();
+  var conn_4  = DbConfig.createConnectDB();
 
   conn_1.query(select_sqlstr1_user_cr,[q_user_id], function (error, results_u_cr, fields) {
 	     if (error) throw error;

@@ -1,18 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const mysql = require('mysql');
+const DbConfig = require('../db_connect_factory');
 
-function createConnectDB() {
-
-	var connection = mysql.createConnection({
-	  host     : 'localhost',
-	  user     : 'dococt',
-	  password : 'dococt',
-	  database : 'dcoda_acme'
-	});
-  
-    return connection;
-}
 
 function form_validate(request_body) {
 
@@ -34,7 +23,7 @@ router.post('/', function(req, res, next) {
   var q_email_address = req.body.email;
   var q_passwd = req.body.password;
 
-  var conn = createConnectDB();
+  var conn = DbConfig.createConnectDB();
 
   conn.query(insert_sqlstr_reg, [q_user_name, q_passwd, q_user_name, q_email_address ], function (error, results, fields) {
 
