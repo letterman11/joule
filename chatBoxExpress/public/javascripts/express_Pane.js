@@ -6,6 +6,8 @@ var chatPane = {
 
     init: function() {
       this.paneDiv = document.getElementById('chat_panel');
+      this.chat = document.getElementById('chat_input'); // Fix for extra spaces in send box
+      this.chat.elements[0].value = this.chat.elements[0].value.replace(/\s/g,""); // Fix for extra spaces in send box
     }, 
 
     setPane: function(responseObj) {
