@@ -58,7 +58,7 @@ var SHAPE_DESCRIPTORS = [
                                      [[0,0,"green"],[0,1,"green"],[1,1],[2,1]],
                                      [[0,0,"green"],[1,0,"green"],[0,1],[0,2]] ] },
 
-  { color: "purple", orientations: [ [[0,0,"yellow"],[0,1,"yellow"],[1,0],[2,0]],
+  { color: "purple", orientations: [ [[0,0],[0,1],[1,0],[2,0]],
                                      [[0,0],[1,0],[1,1],[1,2]],
                                      [[0,1],[1,1],[2,1],[2,0]],
                                      [[0,0],[0,1],[0,2],[1,2]] ] },
@@ -295,7 +295,7 @@ alert("error: coord="+coord);
   		var m = new Message(" Bonus:"+"+10", [3,7], "stroke:none;font-size:2px;fill:orange;stroke:black;stroke-width:0.04px;fill-opacity:0.8;font-family:monospace;");
 		m.show()
 		global_b = m;
-        btimeout = setTimeout("Message.prototype.hide_bonus(global_b)", 3000)
+        btimeout = setTimeout("Message.prototype.hide_bonus()", 3000)
         bo = true;  
         eliminateRow(r);
         ++lines;
@@ -330,8 +330,8 @@ Message.prototype = {
     
   },
   hide_bonus : function(m) {
-    document.documentElement.removeChild(m._node);
-    //document.documentElement.removeChild(m._node);
+   document.documentElement.removeChild(global_b._node);
+   // document.documentElement.removeChild(m._node);
   }
 };
 
