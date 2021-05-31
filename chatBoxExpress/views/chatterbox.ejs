@@ -2,25 +2,28 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title> ChatterBox application </title>
-<link rel="stylesheet" href="/stylesheets/style.css" type="text/css" />
+<title> expressChat Application </title>
+<link rel="stylesheet" href="/static/stylesheets/style_express_proto_blue.css" type="text/css" />
 <link rel="shortcut icon" href="/dcoda.net/gen_rsrc/dc.ico">
 <link rel="icon" href="/dcoda.net/gen_rsrc/dc.ico">
 
 <!-- **************************				  -->
 <!-- Take out json js and incorporate into another module -->
 <!-- ************************** 			  -->
-<script type="text/javascript" src="/javascripts/json.js"> </script> 
-<script type="text/javascript" src="/javascripts/express_common.js"> </script> 
-<script type="text/javascript" src="/javascripts/express_ajax_lib.js"> </script> 
-<script type="text/javascript" src="/javascripts/express_Pane.js"> </script> 
+<script type="text/javascript" src="/static/javascripts/json.js"> </script> 
+<script type="text/javascript" src="/static/javascripts/express_common.js"> </script> 
+<script type="text/javascript" src="/static/javascripts/express_ajax_lib.js"> </script> 
+<script type="text/javascript" src="/static/javascripts/express_Pane.js"> </script> 
 </head>
 <body id="layout" onload="App.initialize()" onunload="App.suspend()">
   <div class="center_div">
      <div id="header">
 	<div id="banner">
-	  <a href="/chatterBox"> <img id="banner_image" src="/images/CHAT_BOX_199_26.jpg">  </a> 
-	  <a href="/dcoda.net"> <img id="banner_image2" src="/images/INVERT_DCBANNER_CROP2_219_31_2.jpg">  </a> 
+		<!-- <a href="/expressChat"> <img id="banner_image" src="/static/images/expressChat__Brocklyn.png">  </a> --> 
+			  <a href="/expressChat"> <img id="banner_image" src="/static/images/expressChat__italics.png">  </a>  
+		<!--	  <a href="/expressChat"> <img id="banner_image" src="/static/images/CHAT_BOX_199_26.jpg">  </a> -->
+	  <!--	  	  <a href="/"> <img id="banner_image2" src="/images/INVERT_DCBANNER_CROP2_219_31_2.jpg">  </a>  -->
+	  	  <a href="http://dcoda.net"> <img id="banner_image2" src="/static/images/blue_deep_DCBANNER_CROP2_219_31_2.jpg">  </a>  
 	</div>
         <div id="login" style="display:block">
           <form name="frmLogin">
@@ -46,10 +49,10 @@
 	<div id="logged_on">
          <span class="form_login" id="form_login">
            <script language="Javascript" type="text/javascript">
-            chatUserID = getCookie('chatUserID');
+            chatUserID = getCookie('exchatUserID');
              if(chatUserID != null && chatUserID.length > 0 && chatUserID != "undefined") {
                 document.write(chatUserID + " LOGGED IN | " +
-                " <a href=\"javascript:App.changePane(document,App.PANE.LOGIN)\" style=\"margin-top:10px;\" onclick=\"App.logOut('chatUserID','chatSessionID','Instance')\" target=\"_top\" > LOG OUT </a> ");
+                " <a href=\"javascript:App.changePane(document,App.PANE.LOGIN)\" style=\"margin-top:10px;\" onclick=\"App.logOut('exchatUserID','exchatSessionID','Instance')\" target=\"_top\" > LOG OUT </a> ");
              }
           </script>
          </span>
@@ -115,15 +118,24 @@
 
 <!--     Initial window for ChatBox application   -->
    <div class="landing_panel" id="landing_panel">
-    <div class="inner_panel">
-	<h2> ChatBox is a demo Web 2.0 chat application that allows multiple parties to converse in the same chat room. 
+   <div class="inner_panel"  style="position:relative">
+	<h2> expressChat is an alpha demo chat application that allows multiple parties to converse in the same chat room. 
+	The backend has been rewritten in NodeJS/Express.
 	</h2>
+	<br>
+	<div style="font-weight:bold; position:absolute; left:50%">
+		<p>  Sample logins </p>
+		<p>--------------------</p>
+		<p> username | password </p>
+		<p> bluejack&nbsp;&nbsp;&nbsp;| bluejack  </p>
+		<p> redjack&nbsp;&nbsp;&nbsp;| redjack </p>
+	</div>
     </div>
    </div>
    <div style="clear:both" </div>
        <div id="footer">
 	 <hr style="height:5px; background-color:black">
-        <p class="foot"> Copyright Digital Coda LLC 2010 | All Rights Reserved | angusbrooks@gmail.com </p> 
+        <p class="foot"> Copyright Digital Coda LLC 2020-2021 | All Rights Reserved | angusbrooks@gmail.com </p> 
        </div>
 <!-- end panel -->
 
