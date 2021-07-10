@@ -1,0 +1,74 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=0.80, minimum-scale=1.0, maximum-scale=1.0"/>
+<title> testing 1,2,3  SVGL embed </title>
+<link rel="stylesheet" href="/tetris/mobile_tetris.css" type="text/css" />
+</head>
+<body onload="init()">
+<!--
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 200 400" preserveAspectRatio="none" id="svgroot">
+-->
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" 
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<!-- SVG Tetris for SVG-enabled Mozilla               -->
+<!-- written 2004 by alex fritze <alex@croczilla.com> -->
+<!-- ugly score and time hack by Tuna-Fish            -->
+<!--                                                  -->
+<!-- This file is in the public domain.               -->
+<!--                                                  -->
+
+<!--
+<svg  width="300px" height="300px" viewBox="0 0 200 200" id="svgroot"> 
+-->
+ <div id="banner">
+          <a href="/"> <img id="banner_image2" src="/static/images/DCBANNER_CROP2_219_31_2.jpg">  </a>
+</div>
+
+<div>
+<svg  width="300px" height="300px" id="svgroot"> 
+<text x="1" y="1" font-size="1px">Mozilla SVG Tetris - Press 'h' for help.</text>
+  <g transform="scale(10)">
+    <!-- Rest of document goes here -->
+   <g id="preview" stroke-width="0.02"/>
+   <g id="board" stroke-width="0.02"/>
+   </g>
+</svg>
+</div>
+
+<div id="input_panel" >
+ <div id="top_d"> 
+<!--   <div onclick="javascript:Utility.butSend('pause_button')" id="pause_button"> <h3 class="button"> P</h3> </a>
+  </div> -->
+   <p onclick="javascript:Utility.butSend('pause_button')" id="pause_button"> <b> P</b> </p>
+     <div onclick="javascript:Utility.butSend('up_button')" id="up_button"> <h3 class="button"> ROT </h3>
+     </div>
+</div>
+
+<div id="center_d"> 
+   <div onclick="javascript:Utility.butSend('left_button')" id="left_button"><h3 class="button"> LEFT </h3> </a>
+   </div>
+   <div onclick="javascript:Utility.butSend('drop_button')" id="drop_button"><h3 class="button"> DROP </h3> </a>
+   </div>
+   <div onclick="javascript:Utility.butSend('right_button')" id="right_button"> <h3 class="button"> RIGHT </h3> </a>
+  </div>
+</div>
+<!--
+   <div onclick="javascript:Utility.butSend('pause_button')" id="pause_button"> <h3 class="button"> PAUSE </h3> </a>
+  </div>
+-->
+<!--
+<div id="bottom_d">
+   <div onclick="javascript:Utility.butSend('down_button')" id="down_button"><h3> DOWN </h3> 
+   </div>
+</div>
+-->
+<script type="text/javascript" src="c_m_pause.js"> </script>
+<!-- <script type="text/javascript" src="svgxtetris_min.js"> </script> -->
+<script type="text/javascript" src="svg_tetris_min.js"> </script> 
+<!-- test mod -->
+</div>
+<div> &nbsp;</div>
+</body>
+</html>

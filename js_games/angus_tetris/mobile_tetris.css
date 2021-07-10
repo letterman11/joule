@@ -1,0 +1,136 @@
+
+body {
+    height:350px; 
+}
+
+h3 {
+    font-family:"Lucida Console";
+}
+
+a:link {
+	text-decoration:none;
+
+}
+
+#GContain {
+    width:220px;
+    height:450px;
+}
+
+
+#xframe {
+ 	width:400px;
+	height:550px;
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+}
+
+#input_panel {
+   position:relative;
+   border:none;
+   background-color:orange;
+   height:auto;
+   width:200px;
+   margin:0px 0px 0px 0px;
+   padding:0px 0px 0px 0px;
+}
+
+#top_d {
+   position:relative;
+   height:80px;
+   background-color:orange;
+   border:solid;
+}
+
+#center_d {
+   position:relative;
+   height:80px;
+   background-color:orange;
+   border:solid;
+   margin:0px 0px 0px 0px;
+   padding:0px 0px 0px 0px;
+}
+
+
+#bottom_d {
+   position:relative;
+   height:80px;
+   background-color:orange;
+   border:solid;
+
+
+
+}
+
+.button {
+	text-align:center;
+}
+
+.pause {
+	text-align:left;
+}
+
+#left_button {
+	position:relative;
+        float:left;
+        height:50px;
+        width:50px;
+        padding:5px;
+        background-color:green;
+        border:solid olive 1px;
+}
+
+#right_button {  
+	position:relative;
+        float:right;
+        height:50px;
+        width:50px;
+        padding:5px;
+        background-color:green;
+        border:solid olive 1px;
+}
+/*-------------------------------------------------*/
+#up_button {
+        left:67px;
+	position:absolute;
+        height:50px;
+        width:50px;
+        padding:5px;
+        background-color:green;
+        border:solid olive 1px;
+
+}
+
+#pause_button {
+        left:10px; 
+	position:absolute;
+/*	float:right; */
+        height:10px;
+        width:10px;
+        padding:5px;
+        background-color:green;
+        border:solid olive 1px;
+
+}
+/*-------------------------------------------------------*/
+#down_button {
+        left:67px;
+	position:absolute;
+        height:50px;
+        width:50px;
+        padding:5px;
+        background-color:green;  
+        border:solid olive 1px;
+}
+
+#drop_button {
+        left:67px;
+	position:absolute;
+        height:50px;
+        width:50px;
+        padding:5px;
+        background-color:green;
+        border:solid olive 1px;
+
+}
+
