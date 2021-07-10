@@ -11,8 +11,8 @@ var COLS = 12
 var HPAD = 2; // horizontal padding used in laying out grids
 var VPAD = 2; // ditto for vertical
 
-var global_m;
-var global_b;
+var global_m = [];
+var global_b = [];
 var time_id;
 var cc = 2; //color coordinate
 var grey = "grey";
@@ -277,7 +277,7 @@ alert("error: coord="+coord);
 		score+=10;
   		var m = new Message(" Bonus:"+"+10", [3,7], "stroke:none;font-size:2px;fill:orange;stroke:black;stroke-width:0.04px;fill-opacity:0.8;font-family:monospace;");
 		m.show()
-		global_b = m;
+		global_b.push(m);
         btimeout = setTimeout("Message.prototype.hide_bonus()", 3000)
         bo = true;  
         eliminateRow(r);
@@ -313,7 +313,7 @@ Message.prototype = {
   hide : function(m) {
     svgR =  document.getElementById("svgroot");
     svgBoard = svgR.getElementById("board");
-    svgBoard.removeChild(global_m._node)
+    global_m.length && svgBoard.removeChild(global_m.pop()._node)
 //    document.documentElement.removeChild(global_m._node);
     //document.documentElement.removeChild(m._node);
     
@@ -321,7 +321,7 @@ Message.prototype = {
   hide_bonus : function(m) {
     svgR =  document.getElementById("svgroot");
     svgBoard = svgR.getElementById("board");
-    svgBoard.removeChild(global_b._node);
+    global_b.length && svgBoard.removeChild(global_b.pop()._node);
    //document.documentElement.removeChild(global_b._node);
    // document.documentElement.removeChild(m._node);
   }
@@ -425,7 +425,7 @@ function runNextShape() {
   board.eliminateFullRows();
   score = score+1;
   var m = new Message(" Score:"+score, [1,10], "stroke:none;font-size:2px;fill:white;stroke:black;stroke-width:0.04px;fill-opacity:0.8;font-family:monospace;");
-  global_m = m;
+  global_m.push(m);
   m.show()
   time_id = setTimeout("Message.prototype.hide()", 2000);
   suspendRedraw();
@@ -484,7 +484,7 @@ function keyHandler(event) {
       if (gameState == "running")
         drop(currentShape, board);
 		clearTimeout(time_id);
-        //Message.prototype.hide();
+        Message.prototype.hide();
       break;
     case 72: /* h */
       pause();
