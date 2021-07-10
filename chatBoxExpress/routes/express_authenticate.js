@@ -37,8 +37,10 @@ router.post('/', function(req, res) {
          if (results[0] != undefined) 
          {
 			console.log("SQL out ", results);
-            	res.cookie("chatSessionID",req.session.id, { path: "/chatterBox" }); 
-		    res.cookie("chatUserID",results[0].USER_NAME, { path: "/chatterBox" });
+            	//res.cookie("chatSessionID",req.session.id, { path: "/chatterBox" }); 
+            	res.cookie("chatSessionID",req.session.id, { path: "/expressChat" }); 
+		    //res.cookie("chatUserID",results[0].USER_NAME, { path: "/chatterBox" });
+		    res.cookie("chatUserID",results[0].USER_NAME, { path: "/expressChat" });
 			req.session.chatSessionID = req.session.id;
             res.send("Application Success");
          }
