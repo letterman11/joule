@@ -58,7 +58,8 @@ function customAuthen(req, res, next) {
    else 
   {
      res.statusCode = 401;   
-     res.send("Unauthorized");
+     //res.send("Unauthorized");
+     res.send("Not Authorized");
   }  
  
 }
@@ -72,11 +73,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/chatterBox/registration', registrationRouter);
-app.use('/chatterBox/authenticate', authenticationRouter);
+app.use('/expressChat/registration', registrationRouter);
+app.use('/expressChat/authenticate', authenticationRouter);
 app.use(customAuthen);
-app.use('/chatterBox/chat_server', chatServerRouter);
-app.use('/chatterBox/ping_msg_server', msgServerRouter);
+app.use('/expressChat/chat_server', chatServerRouter);
+app.use('/expressChat/ping_msg_server', msgServerRouter);
 
 
 // catch 404 and forward to error handler
