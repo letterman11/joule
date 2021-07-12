@@ -302,7 +302,7 @@ function createCookie(name,value,days)
                 var expires = "; expires="+date.toGMTString();
         }
         else var expires = "";
-        document.cookie = name+"="+value+expires+"; path=/chatterBox";
+        document.cookie = name+"="+value+expires+"; path=/expressChat";
 }
 
 function eraseCookie(name)
