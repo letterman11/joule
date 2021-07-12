@@ -7,7 +7,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/chatterBox', function(req, res, next) {
+router.get('/expressChat', function(req, res, next) {
 //  res.render('index', { title: 'Express' });
   res.render('chatterbox', { title: 'Express' });
 });
