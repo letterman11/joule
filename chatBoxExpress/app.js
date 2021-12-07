@@ -5,14 +5,24 @@ var path = require('path');
 var parseurl = require('parseurl');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-/*--------- inclusion of routes----------------------------*/
+
+
+/*--------- inclusion of CODE FOR REST PATHS/ROUTES ---------------*/
+//------------------------------------------------------------------
+// javascript functions to handle each route/path
+//------------------------------------------------------------------
+
 var indexRouter = require('./routes/index');
 var registrationRouter = require('./routes/express_registration');
 var authenticationRouter = require('./routes/express_authenticate');
 var chatServerRouter = require('./routes/express_chat_server');
 var msgServerRouter = require('./routes/express_ping_msg_server');
 var app = express();
-/*--------------------------------------------------------*/
+
+//-----------------------------------------------------------------
+/*----------------------------------------------------------------*/
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -20,6 +30,9 @@ app.set('view engine', 'ejs');
 //app.use(express.urlencoded({ extended: true })) 
 
 /*------------------------------------------------------------------------
+|  @@@@@@@@@@@@@@@@@@@@@
+|  SESSION CODE BLOCK
+|  @@@@@@@@@@@@@@@@@@@@@
 | create express-session with default 'MemoryStore'  -- do not use in real production
 | use other express session solutions such as
 |  + connect-sqlite3 
@@ -27,7 +40,8 @@ app.set('view engine', 'ejs');
 |----------------------------------------------------------------------*/
 var MySQLStore = require('express-mysql-session')(session);
 var options = {
-    host: 'localhost',
+    //host: 'localhost',
+    host: '192.168.1.33',
     port: 3306,
     user: 'dococt',
     password: 'dococt',
@@ -45,25 +59,25 @@ app.use(session({
 }));
 
 
-/*-- middleware authorize route function ------------------------------------------
-| middle-ware called each time on request from client -- real easy  coding flow 
----------------------------------------------------------------------------------*/
+//@@ END SESSION CODE BLOCK 
+//@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+/*-- MIDDLEWARE AUTHENTICATION  --------------------------------------------------
+| middle-ware called each time on request from client -- REAL EASY CODING FLOW   |
+--------------------------------------------------------------------------------*/
 function customAuthen(req, res, next) {
   
   if((req.session.chatSessionID) && req.session.chatSessionID == req.session.id) 
   { 
      //console.log("Auth middleware ", req.session.chatSessionID);
      next();
-  } 
-   else 
-  {
-     res.statusCode = 401;   
+  } else { res.statusCode = 401;   
      //res.send("Unauthorized");
      res.send("Not Authorized");
   }  
  
 }
-/* - end middleware
+/* - END MIDDLEWARE AUTHENTICATION
 /* ------------------------------------------------------------------------- */
 
 app.use(logger('dev'));
@@ -72,13 +86,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+/*----------------- REST PATHS  ----------------------------*/
+//-----------------------------------------------------------
 app.use('/', indexRouter);
 app.use('/expressChat/registration', registrationRouter);
 app.use('/expressChat/authenticate', authenticationRouter);
 app.use(customAuthen);
 app.use('/expressChat/chat_server', chatServerRouter);
 app.use('/expressChat/ping_msg_server', msgServerRouter);
-
+//-----------------------------------------------------------
+/*------------------ REST PATHS  --------------------------*/
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
