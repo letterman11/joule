@@ -1,0 +1,22 @@
+
+body {
+//    height:800px; 
+}
+
+h3 {
+    font-family:"Lucida Console";
+}
+
+a:link {
+	text-decoration:none;
+
+}
+
+#game_div
+{
+    margin:0 auto;
+    width:50%;
+    height:800px;
+}
+
+
