@@ -308,7 +308,8 @@ class Player extends Game.SpriteActor {
                t.rotate(this.heading * RAD);
                t.add(this.vector);
                
-               bulletList.push(new Asteroids.Bomb(this.position.clone(), t));
+               //bulletList.push(new Asteroids.Bomb(this.position.clone(), t));
+               bulletList.push(new Bomb(this.position.clone(), t));
             }
          }
       }
