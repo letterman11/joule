@@ -1,152 +1,131 @@
 /*--------------------------------------/
 |  file: express_ping_msg_server.js 
 |  author: Angus Brooks
-|
+|  refactored: Using Promises/async-await -claude-ai
 ---------------------------------------*/
 
 const express = require('express');
 const router = express.Router();
 const DbConfig = require('../db_connect_factory');
-
+const util = require('util');
 
 function genTimeStamp(newStamp) {
-
-  //2020-2-20 13:13:58
-  var ts = newStamp || new Date();
-  var time_str = ts.toTimeString().substr(0,9);
-  var year = ts.getFullYear();
-  var month = ts.getUTCMonth()+1;
-  var day = ts.getDate();
-  var timeStamp = year +"-"+month+"-"+day+" "+time_str;
+  // 2020-2-20 13:13:58
+  const ts = newStamp || new Date();
+  const timeStr = ts.toTimeString().substr(0, 9);
+  const year = ts.getFullYear();
+  const month = ts.getMonth() + 1; // Fixed: was getUTCMonth, now using local time consistently
+  const day = ts.getDate();
+  const timeStamp = `${year}-${month}-${day} ${timeStr}`;
   return timeStamp;
-
 }
-
 
 router.get('/', function(req, res, next) {
   console.log("Get express ping msg server Successful Route");
-  res.send('Get Ping MSG  Route AA CC DD');
-
+  res.send('Get Ping MSG Route AA CC DD');
 });
 
 /* -- message sent back to client for each client logged into a given chat room --
-	{
-    "messages" : [ 
-                       { 
-                          "user_id" :  "jenjen", 
-  					     "room_id" :  "basketball", 
-                          "msg_text" : "the bee", 
-                          "msg_q_id" : "75", 
-                          "time_stamp" : "2020-02-21 11:33:52" 
-                      }  
-					] , 
-   "msg_user_ids" : [ "jenjen"  , "jonjon" ]   
-   }
+{
+  "messages": [
+    {
+      "user_id": "jenjen",
+      "room_id": "basketball",
+      "msg_text": "the bee",
+      "msg_q_id": "75",
+      "time_stamp": "2020-02-21 11:33:52"
+    }
+  ],
+  "msg_user_ids": ["jenjen", "jonjon"]
+}
 */
 
-function genJSonMsg(res_msg_array, results_user_id) {
+function genJSonMsg(resMsgArray, resultsUserId) {
+  const jsonObj = {
+    msg_user_ids: resultsUserId.map(u => u.user_id)
+  };
 
-   var json_obj;
-   var messages_str;
-   var users_str;
+  if (resMsgArray && resMsgArray.length > 0) {
+    jsonObj.messages = [{
+      user_id: resMsgArray[0].USER_ID,
+      room_id: resMsgArray[0].ROOM_ID,
+      msg_text: resMsgArray[0].CHAT_TEXT,
+      msg_q_id: resMsgArray[0].CR_QUEUE_ID,
+      time_stamp: genTimeStamp(resMsgArray[0].INSERT_TS)
+    }];
+  }
 
-   console.log("function result set ", res_msg_array);
-   if (res_msg_array && res_msg_array.length > 0) {
-   messages_str =  " "  +
-      "\"messages\" : [ " +
-      "   {  " +
-    "\n \"user_id\" : \"" +  res_msg_array[0].USER_ID + "\"" +
-    ",\n \"room_id\" : \"" + res_msg_array[0].ROOM_ID + "\"" +
-    ",\n \"msg_text\" : \"" + res_msg_array[0].CHAT_TEXT + "\"" +
-    ",\n \"msg_q_id\" : " + res_msg_array[0].CR_QUEUE_ID +
-    ",\n \"time_stamp\" : \"" + genTimeStamp(res_msg_array[0].INSERT_TS) + "\"" +
-     "      }  " +
-     "   ] , ";  
-   }
-
-   users_str = "\n\"msg_user_ids\" : [ ";
-   var i = 0;
-   for(; i< results_user_id.length-1; i++) {
-       users_str += "\"" + results_user_id[i].user_id+"\", ";
-   } 
-   users_str += "\"" + results_user_id[i].user_id + "\" ] ";
- 
-   var json_obj = " {\n ";
-
-   if(messages_str) json_obj += messages_str; 
-
-   json_obj += users_str; 
-   json_obj += "\n }";
-  
-  return json_obj;
-  
+  console.log("JSON object sent back to client", jsonObj);
+  return jsonObj;
 }
 
-const select_sqlstr1_user_cr = "select * from user_cr where user_id = ? ";
-const select_sqlstr2_user_cr = "select user_id from user_cr where room_id = ? ";
-const select_sqlstr3_chat_room_q = "select * from chat_room_queue  where msg_user_id = ? and insert_ts >= ? order by cr_queue_id desc limit 2 ";
-const delete_sqlstr4_chat_room_q  = "delete from chat_room_queue where cr_queue_id = ? ";
-/*
-const delete_sqlstr4a_chat_room_q  = "delete from chat_room_queue where cr_queue_id in (?,?) ";
- */
+const SELECT_USER_CR = "SELECT * FROM user_cr WHERE user_id = ?";
+const SELECT_ROOM_USERS = "SELECT user_id FROM user_cr WHERE room_id = ?";
+const SELECT_MESSAGES = "SELECT * FROM chat_room_queue WHERE msg_user_id = ? AND insert_ts >= ? ORDER BY cr_queue_id DESC LIMIT 2";
+const DELETE_MESSAGE = "DELETE FROM chat_room_queue WHERE cr_queue_id = ?";
 
 /*----------------------------------------------------
-the dequeue process for for the chat room queue table
+the dequeue process for the chat room queue table
 ----------------------------------------------------*/
-router.post('/', function(req, res, next) {
+router.post('/', async function(req, res, next) {
   console.log("Post express ping msg server Successful Route");
 
-
-
-  const q_user_id = req.body.userID;
-  const q_room_id = req.body.roomID;
-  var g_room_results;
-
-  var conn_1 = DbConfig.createConnectDB();
-  var conn_2 = DbConfig.createConnectDB();
-  var conn_3 = DbConfig.createConnectDB();
-  var conn_4  = DbConfig.createConnectDB();
-
-  conn_1.query(select_sqlstr1_user_cr,[q_user_id], function (error, results_u_cr, fields) {
-	     if (error) throw error;
-
-			console.log();
-  			conn_2.query(select_sqlstr2_user_cr,[q_room_id], function (error, results_user_id, fields) {
-				if (error) throw error;
-
-					var q_time_stamp = results_u_cr[0].DATE_TS;	
-					q_msg_user_id = results_u_cr[0].USER_ID;
-
-					console.log("results from link table ", results_u_cr, results_u_cr[0].USER_ID);
-  					conn_3.query(select_sqlstr3_chat_room_q,[q_user_id, q_time_stamp], function (error, results_msg_array, fields) {
-						if (error) throw error;
-					           	
- 						q_msg_q_id = null;
-                        if ((results_msg_array) && results_msg_array.length > 0 ) {
-						console.log("message array  has been created ",results_msg_array[0].CR_QUEUE_ID);
-					    q_msg_q_id = results_msg_array[0].CR_QUEUE_ID;
-
-                        }
-						console.log("message array ",results_msg_array);
-  						conn_4.query(delete_sqlstr4_chat_room_q,[q_msg_q_id], function (error, results_del, fields) {
-							if (error) throw error;
-							  console.log("Rows affected by deletion ", results_del.affectedRows);	
-							var jsonObj = genJSonMsg(results_msg_array, results_user_id);
- 							console.log("JSON object sent back to client ", jsonObj);
-							//res.json(jsonObj);
-							res.send(jsonObj);
-						});	
-						conn_4.end();
-				   });	
-				conn_3.end();
-			});
-		conn_2.end();
-  });
-	conn_1.end();
+  const qUserId = req.body.userID;
+  const qRoomId = req.body.roomID;
   
- //res.send('OK');
+  let connection;
 
+  try {
+    // Create a single connection and promisify the query method
+    connection = DbConfig.createConnectDB();
+    const query = util.promisify(connection.query).bind(connection);
+
+    // Query 1: Get user chat room info
+    console.log("Querying user_cr for user:", qUserId);
+    const resultsUCr = await query(SELECT_USER_CR, [qUserId]);
+    
+    if (!resultsUCr || resultsUCr.length === 0) {
+      return res.status(404).json({ error: 'User not found in chat room' });
+    }
+
+    console.log("Results from link table", resultsUCr, resultsUCr[0].USER_ID);
+
+    // Query 2: Get all users in the room
+    console.log("Querying users in room:", qRoomId);
+    const resultsUserId = await query(SELECT_ROOM_USERS, [qRoomId]);
+
+    // Query 3: Get messages for the user
+    const qTimeStamp = resultsUCr[0].DATE_TS;
+    const qMsgUserId = resultsUCr[0].USER_ID;
+    
+    console.log("Querying messages for user since:", qTimeStamp);
+    const resultsMsgArray = await query(SELECT_MESSAGES, [qUserId, qTimeStamp]);
+
+    console.log("Message array", resultsMsgArray);
+
+    // Query 4: Delete the message if it exists
+    let qMsgQId = null;
+    if (resultsMsgArray && resultsMsgArray.length > 0) {
+      console.log("Message array has been created", resultsMsgArray[0].CR_QUEUE_ID);
+      qMsgQId = resultsMsgArray[0].CR_QUEUE_ID;
+
+      const resultsDel = await query(DELETE_MESSAGE, [qMsgQId]);
+      console.log("Rows affected by deletion", resultsDel.affectedRows);
+    }
+
+    // Generate and send response
+    const jsonObj = genJSonMsg(resultsMsgArray, resultsUserId);
+    res.json(jsonObj);
+
+  } catch (error) {
+    console.error("Database error:", error);
+    res.status(500).json({ error: 'Database operation failed', details: error.message });
+  } finally {
+    // Always close the connection
+    if (connection) {
+      connection.end();
+    }
+  }
 });
-
 
 module.exports = router;
