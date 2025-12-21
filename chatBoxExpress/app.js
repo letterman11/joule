@@ -6,6 +6,8 @@ var parseurl = require('parseurl');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const fs = require('fs'); // Import standard fs module
+const db = require('./db_connect_factory');
 
 /*--------- inclusion of CODE FOR REST PATHS/ROUTES ---------------*/
 //------------------------------------------------------------------
@@ -40,12 +42,11 @@ app.set('view engine', 'ejs');
 |----------------------------------------------------------------------*/
 var MySQLStore = require('express-mysql-session')(session);
 var options = {
-    //host: 'localhost',
-    host: '192.168.1.33',
-    port: 3306,
-    user: 'dococt',
-    password: 'dococt',
-    database: 'dcoda_acme'
+    host: db.host,
+    port: db.port,
+    user: db.user,
+    password: db.password,
+    database: db.database 
 };
 
 var sessionStore = new MySQLStore(options);
@@ -112,6 +113,9 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
+
 
 module.exports = app;
 
