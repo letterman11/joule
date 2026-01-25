@@ -559,7 +559,7 @@ function init() {
 
 <text x="1" y="1" font-size="1px">Mozilla SVG Tetris - Press 'h' for help.</text>
  <a href="/">
-    <image x="25" y="0" href="/dcoda.net/gen_rsrc/DCBANNER_CROP2_219_31_2.jpg"  height="1" />	
+    <image x="25" y="0" href="/static/images/DCBANNER_CROP2_219_31_2.jpg"  height="1" />	
  </a>
 
 <g id="preview" stroke-width="0.02"/>
