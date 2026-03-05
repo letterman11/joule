@@ -26,28 +26,28 @@ var SHAPE_DESCRIPTORS = [{
         color: "grey",
         orientations: [
             [
-                [0, 0, "grey"],
-                [1, 0, "grey"],
-                [0, 1, "blue"],
-                [1, 1, "blue"]
+                [0, 0],
+                [1, 0],
+                [0, 1],
+                [1, 1]
             ],
             [
-                [0, 0, "blue"],
-                [1, 0, "grey"],
-                [0, 1, "blue"],
-                [1, 1, "grey"]
+                [0, 0],
+                [1, 0],
+                [0, 1],
+                [1, 1]
             ],
             [
-                [0, 0, "blue"],
-                [1, 0, "blue"],
-                [0, 1, "grey"],
-                [1, 1, "grey"]
+                [0, 0],
+                [1, 0],
+                [0, 1],
+                [1, 1]
             ],
             [
-                [0, 0, "grey"],
-                [1, 0, "blue"],
-                [0, 1, "grey"],
-                [1, 1, "blue"]
+                [0, 0],
+                [1, 0],
+                [0, 1],
+                [1, 1]
             ]
         ]
     },
@@ -58,8 +58,8 @@ var SHAPE_DESCRIPTORS = [{
         color: "white",
         orientations: [
             [
-                [0, 0, "red"],
-                [1, 0, "red"],
+                [0, 0 ],
+                [1, 0],
                 [2, 0],
                 [3, 0]
             ],
@@ -67,8 +67,8 @@ var SHAPE_DESCRIPTORS = [{
             [
                 [0, 0],
                 [0, 1],
-                [0, 2, "red"],
-                [0, 3, "red"]
+                [0, 2],
+                [0, 3]
             ]
         ]
     },
@@ -77,26 +77,26 @@ var SHAPE_DESCRIPTORS = [{
         color: "blue",
         orientations: [
             [
-                [0, 0, "green"],
-                [1, 0, "green"],
+                [0, 0],
+                [1, 0],
                 [2, 0],
                 [2, 1]
             ],
             [
-                [1, 0, "green"],
-                [1, 1, "green"],
+                [1, 0],
+                [1, 1],
                 [1, 2],
                 [0, 2]
             ],
             [
-                [0, 0, "green"],
-                [0, 1, "green"],
+                [0, 0],
+                [0, 1],
                 [1, 1],
                 [2, 1]
             ],
             [
-                [0, 0, "green"],
-                [1, 0, "green"],
+                [0, 0],
+                [1, 0],
                 [0, 1],
                 [0, 2]
             ]
@@ -137,7 +137,7 @@ var SHAPE_DESCRIPTORS = [{
         color: "olive",
         orientations: [
             [
-                [0, 0, "yellow"],
+                [0, 0],
                 [0, 1],
                 [1, 0],
                 [2, 0],
@@ -529,6 +529,15 @@ function hide(shape, grid) {
     unsuspendRedraw();
 }
 
+function clearPreviewGrid(grid) {
+    for (var r = 0; r < grid._rows; ++r) {
+        for (var c = 0; c < grid._cols; ++c) {
+            grid.clearCell([c, r]);
+        }
+    } 
+
+}
+
 function occupy(shape, grid) {
     mapc(function(coord) {
             grid.occupyCell(coord);
@@ -572,6 +581,12 @@ function drop(shape, grid) {
         /**/
     ;
     unsuspendRedraw();
+}
+
+function newRandNextShape() {
+    var randNextShape =  new Shape([0, 0]);
+    return randNextShape;
+    //show(randNextShape, preview);
 }
 
 //----------------------------------------------------------------------
@@ -679,6 +694,7 @@ function keyHandler(event) {
                 "Lines : " + lines + "\n" +
                 "h : Display this help\n" +
                 "p : Toggle pause game\n" +
+                "n : new preview block\n" +
                 "up    : Rotate piece counterclockwise\n" +
                 "down  : Rotate piece clocwise\n" +
                 "left  : Move piece left\n" +
@@ -712,6 +728,13 @@ function keyHandler(event) {
             /* right */
             if (gameState == "running")
                 move(currentShape, board, 1, 0);
+            break;
+        case 78:
+            /*  n - replace preview block */
+                clearPreviewGrid(preview);
+                var randShape = newRandNextShape();
+                nextShape = randShape;
+                show(nextShape, preview);
             break;
     }
 }
